@@ -142,3 +142,53 @@
       ```html
       <view catchtap="handleClick"> Click here </view>
       ```
+
+
+
+### 本地存储
+
+* wx.setStorageSync （存储）
+* wx.setStorage
+* wx.getStorageSync （获取）
+* wx.getStorage
+* wx.clearStorageSync （清除全部）
+* wx.clearStorage
+* wx.removeStorageSync （移除指定key）
+* wx.removeStorage
+
+#### wx.setStorageSync
+
+将数据存储在本地缓存中指定的 key 中。会覆盖掉原来该 key 对应的内容。除非用户主动删除或因存储空间原因被系统清理，否则数据都一直可用。单个 key 允许存储的最大数据长度为 1MB，所有数据存储上限为 10MB。
+
+```javascript
+wx.setStorageSync('key', 'value')
+```
+
+#### wx.setStorage (异步)
+
+```javascript
+// 开启加密存储
+wx.setStorage({
+  key: "key",
+  data: "value",
+  encrypt: true, // 若开启加密存储，setStorage 和 getStorage 需要同时声明 encrypt 的值为 true
+  success() {
+    wx.getStorage({
+      key: "key",
+      encrypt: true, // 若开启加密存储，setStorage 和 getStorage 需要同时声明 encrypt 的值为 true
+      success(res) {
+        console.log(res.data)
+      }
+    })
+  }
+})
+```
+
+
+
+#### wx.revokeBufferURL
+
+根据 URL 销毁存在内存中的数据，参数为需要销毁的二进制数据 URL
+
+
+
