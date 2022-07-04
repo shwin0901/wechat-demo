@@ -192,3 +192,94 @@ wx.setStorage({
 
 
 
+
+
+### Flex布局
+
+```css
+flex-grow: 可拉伸    flex-shrink： 可压缩    flex-basis: 当前元素的宽度
+
+flex:默认值  ==> flex-grow: 0,  flex-shrink: 1,  flex-basis: auto
+
+flex:1  ==> flex-grow: 1,  flex-shrink: 1,  flex-basis: 0%
+
+flex:auto  ==> flex-grow: 1,  flex-shrink: 1,  flex-basis: auto
+
+flex: 1会导致父元素宽度自动为100%
+```
+
+
+
+| 值     | flex-grow(可伸缩) | flex-shrink(可压缩) | flex-basis(当前元素宽度) |
+| ------ | ----------------- | ------------------- | ------------------------ |
+| 默认值 | 0                 | 1                   | auto                     |
+| 1      | 1                 | 1                   | 0%                       |
+| auto   | 1                 | 1                   | auto                     |
+
+
+
+
+
+### video组件播放
+
+**属性**
+
+| 属性        | 类型                    | 必填 | 说明                                                       |
+| ----------- | ----------------------- | ---- | ---------------------------------------------------------- |
+| src         | string                  | 是   | 要播放视频的资源地址，支持网络路径、本地临时路径、云文件ID |
+| autoplay    | boolean                 | 否   | 是否自动播放                                               |
+| loop        | boolean                 | 否   | 是否循环播放                                               |
+| muted       | boolean                 | 否   | 是否静音播放                                               |
+| title       | string                  | 否   | 视频的标题，全屏时在顶部展示                               |
+| bindplay    | eventhandle（回调函数） | 否   | 当开始/继续播放时触发 play 事件                            |
+| bindpause   | eventhandle（回调函数） | 否   | 当暂停播放时触发 pause 事件                                |
+| bindended   | eventhandle（回调函数） | 否   | 当播放到末尾时触发 ended 事件                              |
+| bindwaiting | eventhandle（回调函数） | 否   | 视频出现缓冲时触发                                         |
+| binderror   | eventhandle（回调函数） | 否   | 视频播放出错时触发                                         |
+
+
+
+#### VideoContext实例
+
+**可通过 [wx.createVideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.createVideoContext.html) 获取，[VideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.html) 通过 `id` 跟一个 [video](https://developers.weixin.qq.com/miniprogram/dev/component/video.html) 组件绑定，操作对应的 [video](https://developers.weixin.qq.com/miniprogram/dev/component/video.html) 组件**
+
+**方法**
+
+| 方法                                                         | 描述     |
+| ------------------------------------------------------------ | -------- |
+| [VideoContext.play()](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.play.html) | 播放视频 |
+| [VideoContext.pause()](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.pause.html) | 暂停视频 |
+| [VideoContext.stop()](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.stop.html) | 停止视频 |
+| [VideoContext.exitFullScreen()](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.exitFullScreen.html) | 退出全屏 |
+
+**使用案例**
+
+```html
+<video
+    src="{{url}}"
+    bindplay="handlePlay"
+    id="{{vid}}"
+    object-fit="cover"
+    bindended="handleEnded"
+></video>
+```
+
+```javascript
+Page(
+    handlePlay(event){
+    	const vid = event.currentTarget.id;
+    	
+    	// 通过上一个id与当前id，上个实例对象是否存在，从而关闭上一个播放的视频
+		this.vid !== vid && this.videoContext && this.videoContext.stop();
+    
+    	// 通过video的id创建控制video标签的实例对象
+    	this.videoContext = wx.createVideoContext(vid);		
+    },
+)
+```
+
+**单例模式：**
+
+1. 需要创建多个对象的场景下，通过一个变量接收，始终保持只有一个对象
+2. 节省内存空间
+
