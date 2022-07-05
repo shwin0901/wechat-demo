@@ -283,3 +283,73 @@ Page(
 1. 需要创建多个对象的场景下，通过一个变量接收，始终保持只有一个对象
 2. 节省内存空间
 
+
+
+### scorll-view
+
+可滚动视图区域。使用竖向滚动时，需要给[scroll-view](https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html)一个固定高度，通过 WXSS 设置 height
+
+| 属性                 | 类型              | 说明                                                         |
+| -------------------- | ----------------- | ------------------------------------------------------------ |
+| scroll-x             | boolean           | 允许横向滚动                                                 |
+| scroll-y             | boolean           | 允许纵向滚动                                                 |
+| enable-flex          | boolean           | 启用 flexbox 布局。开启后，当前节点声明了 `display: flex` 就会成为 flex container，并作用于其孩子节点。 |
+| bindrefresherrefresh | eventhandle(回调) | 自定义下拉刷新被触发                                         |
+| refresher-enabled    | boolean           | 开启自定义下拉刷新                                           |
+| refresher-triggered  | boolean           | 设置当前下拉刷新状态，true 表示下拉刷新已经被触发，false 表示下拉刷新未被触发 |
+| bindscrolltolower    | eventhandle(回调) | 滚动到底部/右边时触发                                        |
+| bindscrolltoupper    | eventhandle(回调) | 滚动到顶部/左边时触发                                        |
+
+
+
+
+
+### 背景音频[BackgroundAudioManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.html)
+
+##### 功能描述
+
+wx.getBackgroundAudioManager()获取**全局唯一**的背景音频管理器。 小程序切入后台，如果音频处于播放状态，可以继续播放。但是后台状态不能通过调用 API 操纵音频的播放状态。若需要在小程序切后台后继续播放音频，需要在 [app.json](https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/app.html) 中配置 `requiredBackgroundModes` 属性。
+
+##### requiredBackgroundModes 申明需要后台运行的能力，类型为数组。目前支持以下项目：
+
+- `audio`: 后台音乐播放
+- `location`: 后台定位
+
+```json
+{
+  "pages": ["pages/index/index"],
+  "requiredBackgroundModes": ["audio", "location"]
+}
+```
+
+
+
+#### 实例
+
+**`let example = wx.getBackgroundAudioManager()`**
+
+##### 返回值
+
+| 属性         | 类型    | 描述                                                         |
+| ------------ | ------- | ------------------------------------------------------------ |
+| src          | string  | 音频的数据源。默认为空字符串，**当设置了新的 src 时，会自动开始播放**，目前支持的格式有 m4a, aac, mp3, wav。 |
+| startTime    | number  | 音频开始播放的位置（单位：s）。                              |
+| title(必填)  | string  | 音频标题，用于原生音频播放器音频标题（必填）。原生音频播放器中的分享功能，分享出去的卡片标题，也将使用该值。 |
+| playbackRate | number  | 播放速度。范围 0.5-2.0，默认为 1。                           |
+| currentTime  | number  | 当前音频的播放位置（单位：s），只有在有合法 src 时返回。     |
+| paused       | boolean | 当前是否暂停或停止。                                         |
+
+
+
+##### 实例方法
+
+| 方法                                                         | 描述                 |
+| ------------------------------------------------------------ | -------------------- |
+| [example.play()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.play.html) | 播放音乐             |
+| [example.pause()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.pause.html) | 暂停音乐             |
+| [example.seek(number currentTime)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.seek.html) | 跳转到指定位置       |
+| [example.stop()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.stop.html) | 停止音乐             |
+| [example.onPlay(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPlay.html) | 监听背景音频播放事件 |
+| [BackgroundAudioManager.onPause(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPause.html) | 监听背景音频暂停事件 |
+| [BackgroundAudioManager.onStop(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onStop.html) | 监听背景音频停止事件 |
+
