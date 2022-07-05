@@ -343,13 +343,61 @@ wx.getBackgroundAudioManager()获取**全局唯一**的背景音频管理器。 
 
 ##### 实例方法
 
-| 方法                                                         | 描述                 |
-| ------------------------------------------------------------ | -------------------- |
-| [example.play()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.play.html) | 播放音乐             |
-| [example.pause()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.pause.html) | 暂停音乐             |
-| [example.seek(number currentTime)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.seek.html) | 跳转到指定位置       |
-| [example.stop()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.stop.html) | 停止音乐             |
-| [example.onPlay(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPlay.html) | 监听背景音频播放事件 |
-| [BackgroundAudioManager.onPause(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPause.html) | 监听背景音频暂停事件 |
-| [BackgroundAudioManager.onStop(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onStop.html) | 监听背景音频停止事件 |
+| 方法                                                         | 描述                                                     |
+| ------------------------------------------------------------ | -------------------------------------------------------- |
+| [example.play()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.play.html) | 播放音乐                                                 |
+| [example.pause()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.pause.html) | 暂停音乐                                                 |
+| [example.seek(number currentTime)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.seek.html) | 跳转到指定位置                                           |
+| [example.stop()](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.stop.html) | 停止音乐                                                 |
+| [example.onPlay(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPlay.html) | 监听背景音频播放事件                                     |
+| [example.onPause(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPause.html) | 监听背景音频暂停事件                                     |
+| [example.onStop(function callback)](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onStop.html) | 监听背景音频停止事件                                     |
+| example.onTimeUpdate()                                       | 监听背景音频播放进度更新事件，只有小程序在前台时会回调。 |
+| example.onEnded()                                            | 监听背景音频自然播放结束事件                             |
 
+
+
+
+
+### 小程序App.js
+
+注册小程序。接受一个 `Object` 参数，其指定小程序的生命周期回调等。
+
+**App() 必须在 `app.js` 中调用，必须调用且只能调用一次。不然会出现无法预期的后果。**
+
+1. 在App.js设置全局状态属性
+
+   ```javascript
+   App({
+         /**
+      * 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
+      */
+     onLaunch: function () {
+     },
+       
+     globalData: {
+         isMusicPlay: false,
+         musicId: ''
+     }
+   })
+   ```
+
+2. 获取到小程序全局唯一的 `App` 实例。
+
+   ```javascript
+   // index.js
+   const appInstance = getApp();
+   
+   // 设置全局实例状态属性值
+   appInstance.isMusicPlay = true;
+   appInstance.musicId = 1;
+   
+   // 获取全局实例状态属性值
+   console.log(appInstance.globalData.isMusicPlay) // 获取isMusicPlay
+   console.log(appInstance.globalData.musicId) // 获取musicId
+   ```
+
+   #### 注意事项
+
+   - 不要在定义于 `App()` 内的函数中，或调用 `App` 前调用 `getApp()` ，使用 `this` 就可以拿到 app 实例。
+   - 通过 `getApp()` 获取实例之后，不要私自调用生命周期函数。
